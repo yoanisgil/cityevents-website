@@ -1,0 +1,22 @@
+{
+  "name": "cityevents-website",
+  "version": "1.0.0",
+  "authors": [
+    "Yoanis Gil Delgado <gil.yoanis@gmail.com>"
+  ],
+  "description": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ngmap": "~1.13.13",
+    "lodash": ">=3.8.0",
+    "sc-date-time": "~1.1.6",
+    "angular": "~1.4.9"
+  }
+}
