@@ -62,16 +62,31 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime'])
                 event_data = _.merge(event_data, value);
             });
 
-            $http.post('http://localhost:3001/event', event_data).success(function (response) {
-                console.log('event created');
-            });
+            $http.post('http://localhost:3001/event', event_data);
         };
 
 
         var socket = io.connect('http://localhost:3002');
 
         socket.on('new location', function (data) {
-            console.log('NEW LOCATION', JSON.stringify(data));
+            $scope.addEvent(data);
+        });
+
+        socket.on('delete location', function (data) {
+            if (undefined !== $scope.markers[data.id]) {
+                $scope.markers[data.id].setMap(null);
+            }
+        });
+
+        $scope.search = function () {
+            $http.get('http://localhost:3001/event').success(function (response) {
+                _(response).forEach(function (event) {
+                    $scope.addEvent(event);
+                });
+            });
+        };
+
+        $scope.addEvent = function (data) {
             if (undefined === $scope.markers[data.id]) {
                 var marker = new google.maps.Marker({
                     position: {lat: data.location.coordinates[1], lng: data.location.coordinates[0]},
@@ -84,13 +99,10 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime'])
 
                 $scope.markers[data.id] = marker;
             }
-        });
+        };
 
-        socket.on('delete location', function (data) {
-            console.log('DELETE LOCATION', JSON.stringify(data));
-            if (undefined !== $scope.markers[data.id]) {
-                $scope.markers[data.id].setMap(null);
-            }
+        $scope.$on('mapInitialized', function (evt, map) {
+            $scope.search();
         });
 
     });
