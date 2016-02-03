@@ -14,6 +14,10 @@
             margin: 0;
             padding: 0;
         }
+
+        .time-date > .buttons {
+            display: none;
+        }
     </style>
 </head>
 
@@ -22,16 +26,20 @@
 <br/>
 
 <div ng-controller="AppController" class="md-inline-form" layout="column">
-    <md-content md-theme="docs-dark" layout-gt-sm="row" layout-padding="">
+    <md-content layout-gt-sm="row" layout-padding="">
         <div flex="33">
             <md-toolbar>
                 <div class="md-toolbar-tools">
-                  <h2>
+                    <h2>
                         <span>New Event</span>
                     </h2>
                     <span flex=""></span>
                 </div>
             </md-toolbar>
+            <md-input-container>
+                <label>What</label>
+                <input ng-model="name" placeholder="Heavy Montreal">
+            </md-input-container>
             <md-input-container>
                 <label>Where</label>
                 <input places-auto-complete
@@ -44,8 +52,10 @@
                        placeholder="ex: Place des Arts, Montreal">
             </md-input-container>
 
-            <time-date-picker ng-model="dateValue" data-display-mode="full"
+            <time-date-picker ng-model="when" compact="true" autosave="true"
                               class="modal-content"></time-date-picker>
+
+            <md-button class="md-raised" ng-click="create()" ng-disabled="!isValidForCreation()">Create</md-button>
         </div>
         <div flex>
             <div map-lazy-load="http://maps.google.com/maps/api/js?v=3.20&key=AIzaSyB48Iq3ZYy4BfR4S47CINf1Q9nBhC5VqdU">

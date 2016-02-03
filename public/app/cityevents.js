@@ -6,19 +6,24 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime'])
     .controller('AppController', function ($scope, $http) {
         $scope.types = "['geocode']";
 
-        $scope.dateValue = new Date();
+        $scope.when = new Date();
         $scope.address = '';
+        $scope.name = '';
         $scope.markers = [];
 
         var latLngBounds = new google.maps.LatLngBounds();
 
         $scope.placeChanged = function () {
             $scope.place = this.getPlace();
-            $scope.search();
         };
 
-        $scope.search = function () {
+        $scope.isValidForCreation = function () {
+            return $scope.address.length > 0 && $scope.place != null && $scope.name.length > 0;
+        };
+
+        $scope.create = function () {
             console.log($scope.place);
+
             var lat = $scope.place.geometry.location.lat();
             var lng = $scope.place.geometry.location.lng();
 
@@ -46,9 +51,11 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime'])
             });
 
             var event_data = {
-                address: $scope.address,
+                address: $scope.place.formatted_address,
                 lat: lat,
-                lng: lng
+                lng: lng,
+                name: $scope.name,
+                when: $scope.when.getTime() / 1000
             };
 
             _.forEach(geo_data, function (value) {
@@ -58,8 +65,8 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime'])
             $http.post('http://localhost:3001/event', event_data).success(function (response) {
                 console.log('event created');
             });
-
         };
+
 
         var socket = io.connect('http://localhost:3002');
 
