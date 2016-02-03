@@ -24,8 +24,8 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime', 'jkuri.galler
             return $scope.address.length > 0 && $scope.place != null && $scope.name.length > 0;
         };
 
-        $scope.hideGallery = function() {
-          $scope.gallery_show = false;
+        $scope.hideGallery = function () {
+            $scope.gallery_show = false;
         };
 
         $scope.create = function () {
@@ -118,12 +118,16 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime', 'jkuri.galler
                     $scope.map.setCenter(marker.getPosition());
 
                     $scope.event_images = [];
+                    $scope.gallery_show = false;
 
-                    _.each(_.sampleSize(data.photos, 3), function (value) {
-                        $scope.event_images.push({thumb: value.url, img: value.url});
-                    });
 
-                    $scope.gallery_show = true;
+                    if (data.photos.length > 0) {
+                        _.each(_.sampleSize(data.photos, 3), function (value) {
+                            $scope.event_images.push({thumb: value.url, img: value.url});
+                        });
+
+                        $scope.gallery_show = true;
+                    }
 
                     $scope.$apply();
                 });

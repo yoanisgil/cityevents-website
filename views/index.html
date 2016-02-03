@@ -52,12 +52,14 @@
                     <span flex=""></span>
                 </div>
             </md-toolbar>
-            <md-input-container>
+
+            <md-input-container layout="row">
                 <label>What</label>
                 <input ng-model="name" placeholder="Heavy Montreal">
             </md-input-container>
-            <md-input-container>
-                <label>Where</label>
+
+            <md-input-container layout="row">
+                <label>Where</label>g
                 <input places-auto-complete
                        ng-model="address"
                        types="{{types}}"
@@ -95,9 +97,7 @@
                 <ng-gallery images="event_images"></ng-gallery>
             </div>
 
-            <div map-lazy-load="http://maps.google.com/maps/api/js?v=3.20&key=AIzaSyB48Iq3ZYy4BfR4S47CINf1Q9nBhC5VqdU">
-                <map center="41,-87" zoom="3"></map>
-            </div>
+            <ng-map center="41,-87" zoom="3"></ng-map>
         </div>
     </md-content>
 </div>
