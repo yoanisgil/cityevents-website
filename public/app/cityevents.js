@@ -2,7 +2,7 @@
  * Created by Yoanis Gil on 15-10-13.
  */
 
-angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime'])
+angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime', 'jkuri.gallery'])
     .controller('AppController', function ($scope, $http) {
         $scope.types = "['geocode']";
 
@@ -10,6 +10,9 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime'])
         $scope.address = '';
         $scope.name = '';
         $scope.markers = [];
+        $scope.gallery_show = false;
+
+        $scope.event_images = [];
 
         var latLngBounds = new google.maps.LatLngBounds();
 
@@ -19,6 +22,10 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime'])
 
         $scope.isValidForCreation = function () {
             return $scope.address.length > 0 && $scope.place != null && $scope.name.length > 0;
+        };
+
+        $scope.hideGallery = function() {
+          $scope.gallery_show = false;
         };
 
         $scope.create = function () {
@@ -50,12 +57,19 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime'])
                 return result;
             });
 
+            var photos = $scope.place.photos || [];
+
+            photos = _.map(photos, function (photo) {
+                return {url: photo.getUrl({'maxWidth': 800})};
+            });
+
             var event_data = {
                 address: $scope.place.formatted_address,
                 lat: lat,
                 lng: lng,
                 name: $scope.name,
-                when: $scope.when.getTime() / 1000
+                when: $scope.when.getTime() / 1000,
+                photos: photos
             };
 
             _.forEach(geo_data, function (value) {
@@ -98,6 +112,21 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime'])
                 $scope.map.fitBounds(latLngBounds);
 
                 $scope.markers[data.id] = marker;
+                marker.setValues({event: data});
+
+                marker.addListener('click', function () {
+                    $scope.map.setCenter(marker.getPosition());
+
+                    $scope.event_images = [];
+
+                    _.each(_.sampleSize(data.photos, 3), function (value) {
+                        $scope.event_images.push({thumb: value.url, img: value.url});
+                    });
+
+                    $scope.gallery_show = true;
+
+                    $scope.$apply();
+                });
             }
         };
 

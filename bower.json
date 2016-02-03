@@ -17,6 +17,7 @@
     "ngmap": "~1.13.13",
     "lodash": ">=3.8.0",
     "sc-date-time": "~1.1.6",
-    "angular": "~1.4.9"
+    "angular": "~1.4.9",
+    "angular-material": "~1.0.4"
   }
 }
