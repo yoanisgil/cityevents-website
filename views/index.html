@@ -59,7 +59,7 @@
             </md-input-container>
 
             <md-input-container layout="row">
-                <label>Where</label>g
+                <label>Where</label>
                 <input places-auto-complete
                        ng-model="address"
                        types="{{types}}"
@@ -76,13 +76,13 @@
             <md-button class="md-raised" ng-click="create()" ng-disabled="!isValidForCreation()">Create</md-button>
         </div>
         <div flex>
-            <md-toolbar ng-show="gallery_show">
+            <md-toolbar ng-show="show_details">
                 <div class="md-toolbar-tools">
                     <h2>
-                        <span>Random Images</span>
+                        <span>Details</span>
                     </h2>
                     <span flex=""></span>
-                    <md-button class="md-icon-button" aria-label="Favorite" ng-click="hideGallery()">
+                    <md-button class="md-icon-button" aria-label="Favorite" ng-click="hideDetails()">
                         <ng-md-icon icon="close" size="24">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                                 <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
@@ -93,11 +93,38 @@
             </md-toolbar>
             <br/>
 
-            <div class="gallery" ng-show="gallery_show">
-                <ng-gallery images="event_images"></ng-gallery>
-            </div>
+            <md-content ng-show="show_details">
+                <md-input-container layout="row" flex="50">
+                    <label>Directions</label>
+                    <input places-auto-complete
+                           ng-model="from_address"
+                           types="{{types}}"
+                           on-place-changed="fromPlaceChanged(place)"
+                           type="text"
+                           class="form-control"
+                           id="directionsFrom"
+                           placeholder="ex: Place des Arts, Montreal">
+                </md-input-container>
 
-            <ng-map center="41,-87" zoom="3"></ng-map>
+
+                <md-switch class="md-primary" md-no-ink="" aria-label="Switch No Ink" ng-model="show_gallery">
+                    Show place images
+                </md-switch>
+
+                <div class="gallery" ng-show="show_gallery">
+                    <ng-gallery images="event_images"></ng-gallery>
+                </div>
+            </md-content>
+
+
+            <ng-map center="41,-87" zoom="3">
+                <directions
+                        draggable="true"
+                        travel-mode="DRIVING"
+                        origin="{{from_address}}"
+                        destination="{{to_address}}">
+                </directions>
+            </ng-map>
         </div>
     </md-content>
 </div>

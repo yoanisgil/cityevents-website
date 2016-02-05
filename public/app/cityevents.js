@@ -8,24 +8,37 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime', 'jkuri.galler
 
         $scope.when = new Date();
         $scope.address = '';
+        $scope.from_address = '';
+        $scope.to_address = '';
         $scope.name = '';
         $scope.markers = [];
-        $scope.gallery_show = false;
+        $scope.show_details = false;
+        $scope.origin = "";
+        $scope.destination = "";
 
         $scope.event_images = [];
 
         var latLngBounds = new google.maps.LatLngBounds();
 
         $scope.placeChanged = function () {
-            $scope.place = this.getPlace();
+            var place = this.getPlace();
+            $scope.from_adress = place. formatted_address;
+        };
+
+        $scope.fromPlaceChanged = function () {
+            var place = this.getPlace();
+            $scope.destination = $scope.to_address;
         };
 
         $scope.isValidForCreation = function () {
             return $scope.address.length > 0 && $scope.place != null && $scope.name.length > 0;
         };
 
-        $scope.hideGallery = function () {
-            $scope.gallery_show = false;
+        $scope.hideDetails = function () {
+            $scope.show_details = false;
+            $scope.from_address = "";
+
+            $scope.apply();
         };
 
         $scope.create = function () {
@@ -115,19 +128,18 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime', 'jkuri.galler
                 marker.setValues({event: data});
 
                 marker.addListener('click', function () {
-                    $scope.map.setCenter(marker.getPosition());
-
+                    $scope.show_details = true;
                     $scope.event_images = [];
-                    $scope.gallery_show = false;
-
+                    $scope.map.setCenter(marker.getPosition());
 
                     if (data.photos.length > 0) {
                         _.each(_.sampleSize(data.photos, 3), function (value) {
                             $scope.event_images.push({thumb: value.url, img: value.url});
                         });
 
-                        $scope.gallery_show = true;
                     }
+
+                    $scope.to_address = data.address;
 
                     $scope.$apply();
                 });
