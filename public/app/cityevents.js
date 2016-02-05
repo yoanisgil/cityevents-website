@@ -15,19 +15,29 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime', 'jkuri.galler
         $scope.show_details = false;
         $scope.origin = "";
         $scope.destination = "";
+        $scope.flex = 100;
+        $scope.directions_flex = 0;
 
         $scope.event_images = [];
 
         var latLngBounds = new google.maps.LatLngBounds();
 
+        $scope.mapWidth = function () {
+            return $scope.from_address.length > 0 ? $scope.flex : 100;
+        };
+
         $scope.placeChanged = function () {
             var place = this.getPlace();
-            $scope.from_adress = place. formatted_address;
+            $scope.from_adress = place.formatted_address;
         };
 
         $scope.fromPlaceChanged = function () {
             var place = this.getPlace();
             $scope.destination = $scope.to_address;
+
+            $scope.flex = 70;
+            $scope.directions_flex = 100 - $scope.flex;
+            ;
         };
 
         $scope.isValidForCreation = function () {
@@ -37,6 +47,8 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime', 'jkuri.galler
         $scope.hideDetails = function () {
             $scope.show_details = false;
             $scope.from_address = "";
+            $scope.flex = 100;
+            $scope.directions_flex = 0;
 
             $scope.apply();
         };
@@ -128,9 +140,10 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime', 'jkuri.galler
                 marker.setValues({event: data});
 
                 marker.addListener('click', function () {
+                    $scope.event_name = data.name;
                     $scope.show_details = true;
                     $scope.event_images = [];
-                    $scope.map.setCenter(marker.getPosition());
+                    //$scope.map.setCenter(marker.getPosition());
 
                     if (data.photos.length > 0) {
                         _.each(_.sampleSize(data.photos, 3), function (value) {

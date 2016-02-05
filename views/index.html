@@ -79,7 +79,7 @@
             <md-toolbar ng-show="show_details">
                 <div class="md-toolbar-tools">
                     <h2>
-                        <span>Details</span>
+                        <span>Details for {{event_name}}</span>
                     </h2>
                     <span flex=""></span>
                     <md-button class="md-icon-button" aria-label="Favorite" ng-click="hideDetails()">
@@ -116,16 +116,20 @@
                 </div>
             </md-content>
 
+            <md-content layout-gt-sm="row" layout-padding="">
+                <ng-map center="41,-87" zoom="3" flex="mapWidth()" class-flex="mapWidth()" layout="column">
+                    <directions
+                            draggable="true"
+                            panel="directions-panel"
+                            travel-mode="DRIVING"
+                            origin="{{from_address}}"
+                            destination="{{to_address}}">
+                    </directions>
+                </ng-map>
 
-            <ng-map center="41,-87" zoom="3">
-                <directions
-                        draggable="true"
-                        travel-mode="DRIVING"
-                        origin="{{from_address}}"
-                        destination="{{to_address}}">
-                </directions>
-            </ng-map>
-        </div>
+                <div id="directions-panel" flex="{{directions_flex}}" class-flex="{{directions_flex}}" layout="column" style="padding: 0;" ng-show="from_address.length > 0">
+                </div>
+            </md-content>
     </md-content>
 </div>
 
