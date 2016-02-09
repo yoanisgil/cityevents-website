@@ -37,7 +37,6 @@ angular.module("cityevents", ['ngMaterial', 'ngMap', 'scDateTime', 'jkuri.galler
 
             $scope.flex = 70;
             $scope.directions_flex = 100 - $scope.flex;
-            ;
         };
 
         $scope.isValidForCreation = function () {
