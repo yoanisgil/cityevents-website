@@ -1,0 +1,30 @@
+<md-toolbar>
+    <div class="md-toolbar-tools">
+        <h2>
+            <span>New Event</span>
+        </h2>
+        <span flex=""></span>
+    </div>
+</md-toolbar>
+
+<md-input-container layout="row">
+    <label>What</label>
+    <input ng-model="name" placeholder="Heavy Montreal">
+</md-input-container>
+
+<md-input-container layout="row">
+    <label>Where</label>
+    <input places-auto-complete
+           ng-model="address"
+           types="{{types}}"
+           on-place-changed="placeChanged(place)"
+           type="text"
+           class="form-control"
+           id="inputFromLocation"
+           placeholder="ex: Place des Arts, Montreal">
+</md-input-container>
+
+<time-date-picker ng-model="when" compact="true" autosave="true"
+                  class="modal-content"></time-date-picker>
+
+<md-button class="md-raised" ng-click="create()" ng-disabled="!isValidForCreation()">Create</md-button>

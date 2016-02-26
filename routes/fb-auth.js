@@ -6,6 +6,7 @@ var express = require('express');
 var router = express.Router();
 var strategies = require('../auth/strategies');
 var passport = require('passport');
+var path = require('path');
 
 router.get(
     '/facebook',
@@ -15,7 +16,9 @@ router.get(
 router.get('/facebook/callback',
     passport.authenticate('facebook', {session: false, failureRedirect: "/"}),
     function (req, res) {
-        res.redirect("/home?access_token=" + req.user.access_token);
+        res.cookie('Access-Token', req.user.token);
+        res.redirect('/');
+
     }
 );
 

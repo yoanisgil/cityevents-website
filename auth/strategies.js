@@ -20,26 +20,51 @@ passport.use(
     new FacebookStrategy(
         options,
         function (accessToken, refreshToken, profile, done) {
-            data = {email: profile.emails[0].value, provider: {'name': 'facebook', data: profile._raw}};
+            request(
+                {
+                    url: 'http://localhost:3001/auth/facebook',
+                    method: 'POST',
+                    json: {access_token: accessToken}
+                }, function (err, response, body) {
+                    if (err) {
+                        done(err, body);
+                    }
 
-            request({
-                url: 'http://localhost:3001/user',
-                method: 'POST',
-                json: data
-            }, function (err, response, body) {
-                if (err) throw err;
+                    switch (response.statusCode) {
+                        case 200:
+                            done(null, {token: body.token});
+                            break;
+                        default:
+                            var data = {
+                                email: profile.emails[0].value,
+                                providers: [{'name': 'facebook', data: profile._raw}]
+                            };
 
-                done(null, body);
-            });
-        }
-    )
-);
+                            request({
+                                url: 'http://localhost:3001/user',
+                                method: 'POST',
+                                json: data
+                            }, function (err, response, body) {
+                                if (err) {
+                                    done(err, body)
+                                }
 
-//token auth setup
-passport.use(
-    new BearerStrategy(
-        function (token, done) {
-            return done(null, {}, {scope: 'all'})
+                                request({
+                                    url: 'http://localhost:300/auth/facebook',
+                                    method: 'POST',
+                                    json: {access_token: accessToken}
+                                }, function (err, response, body) {
+                                    if (err) {
+                                        done(err, body);
+                                    }
+
+                                    done(null, {token: body.token});
+                                });
+
+                            });
+                    }
+                }
+            );
         }
     )
 );

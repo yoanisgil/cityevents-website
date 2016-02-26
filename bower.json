@@ -19,6 +19,7 @@
     "angular": "~1.4.9",
     "angular-material": "~1.0.4",
     "ngmap": "~1.16.7",
-    "ngGallery": "*"
+    "ngGallery": "*",
+    "angular-route": "~1.5.0"
   }
 }
