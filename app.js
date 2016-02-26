@@ -8,6 +8,8 @@ var cons = require('consolidate');
 
 var routes = require('./routes/index');
 var fb_auth = require('./routes/fb-auth');
+var websocket_proxy_routes = require('./routes/websocket-proxy.js');
+var api_proxy_routes = require('./routes/api-proxy.js');
 
 var app = express();
 
@@ -23,11 +25,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
 
 app.use('/', routes);
 app.use('/auth', fb_auth);
+app.use('/', websocket_proxy_routes.router);
+app.use('/api', api_proxy_routes);
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -50,6 +55,7 @@ if (app.get('env') === 'development') {
     });
 }
 
+
 // production error handler
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
@@ -61,4 +67,7 @@ app.use(function (err, req, res, next) {
 });
 
 
-module.exports = app;
+module.exports = {
+    app: app,
+    proxy: websocket_proxy_routes.proxy
+};

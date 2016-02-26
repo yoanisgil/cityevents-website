@@ -151,7 +151,7 @@ cityEventsApp.directive('createEvent', function () {
                 $http.post('http://localhost:3001/event', event_data);
             };
 
-            var socket = io.connect('http://localhost:3002');
+            var socket = io.connect('/');
 
 
             socket.on('new location', function (data) {
@@ -207,7 +207,7 @@ cityEventsApp.directive('eventsMap', function () {
                 $scope.apply();
             };
 
-            var socket = io.connect('http://localhost:3002');
+            var socket = io.connect('/');
 
             socket.on('new location', function (data) {
                 $scope.addEvent(data);
@@ -220,7 +220,7 @@ cityEventsApp.directive('eventsMap', function () {
             });
 
             $scope.search = function () {
-                $http.get('http://localhost:3001/event').success(function (response) {
+                $http.get('/api/event').success(function (response) {
                     _(response).forEach(function (event) {
                         $scope.addEvent(event);
                     });
